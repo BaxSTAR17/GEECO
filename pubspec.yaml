@@ -22,6 +22,7 @@ flutter:
     - assets/images/homepage_bg.png
     - assets/images/bax.jpg
     - assets/images/fabio.jpg
+    - assets/images/ghen.jpg
   fonts:
     - family: Gabarito
       fonts:

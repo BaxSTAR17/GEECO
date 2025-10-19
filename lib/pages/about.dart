@@ -172,14 +172,14 @@ class _AboutUsState extends State<AboutUs> {
                       children: [
                         memberCard(
                           name: 'Ghen Benedict M. Namol',
-                          desc: 'Frontend Developer & Technical Lead',
+                          desc: 'Frontend Developer & \nTechnical Lead',
                           photoRight: true,
-                          //imagePath: 'assets/images/member_alice.jpg',
+                          imagePath: 'assets/images/ghen.jpg',
                         ),
                         const SizedBox(height: 16),
                         memberCard(
                           name: 'Baxter Gifford B. Bao-As',
-                          desc: 'Backend Developer & Technical Lead',
+                          desc: 'Backend Developer & \nTechnical Lead',
                           photoRight: false,
                           alignTextRight: true,
                           imagePath: 'assets/images/bax.jpg',
@@ -187,7 +187,8 @@ class _AboutUsState extends State<AboutUs> {
                         const SizedBox(height: 16),
                         memberCard(
                           name: 'Fabio S. Hascoet',
-                          desc: 'Lead Designer & Assistant Software Developer',
+                          desc:
+                              'Lead Designer & \nAssistant Software Developer',
                           photoRight: true,
                           imagePath: 'assets/images/fabio.jpg',
                         ),
