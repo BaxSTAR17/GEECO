@@ -7,7 +7,7 @@ import 'package:scaled_size/scaled_size.dart';
 // import 'package:flutter/services.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter's binding is initialized
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter's binding is initialized.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
