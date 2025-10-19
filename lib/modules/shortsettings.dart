@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geeco/bax_end/theme_bax_end.dart';
+import 'package:provider/provider.dart';
 import '../pages/about.dart';
 
 class ShortSettings extends StatefulWidget {
@@ -9,7 +11,7 @@ class ShortSettings extends StatefulWidget {
 }
 
 class _ShortSettingsState extends State<ShortSettings> {
-  bool darkMode = true;
+  bool darkModeOn = true;
   bool notificationsEnabled = false;
 
   @override
@@ -21,9 +23,9 @@ class _ShortSettingsState extends State<ShortSettings> {
           widthFactor: 0.80,
           child: Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(5.0),
-              border: BoxBorder.all(color: Colors.black, width: 1.0),
+              border: BoxBorder.all(color: Theme.of(context).colorScheme.shadow, width: 1.0),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -40,6 +42,7 @@ class _ShortSettingsState extends State<ShortSettings> {
                       Row(
                         children: [
                           Icon(Icons.dark_mode),
+                SizedBox(width: 8), 
                           Text(
                             "Dark Mode",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -48,13 +51,14 @@ class _ShortSettingsState extends State<ShortSettings> {
                       ),
                       Switch(
                         // This bool value toggles the switch.
-                        value: darkMode,
-                        activeColor: Color(0xFF83BF4F),
+                        value: Provider.of<ThemeSelector>(context).themeData == darkMode,
+                        activeColor: Theme.of(context).colorScheme.secondary,
                         onChanged: (bool value) {
                           // This is called when the user toggles the switch.
                           setState(() {
-                            darkMode = value;
+                            //darkMode = value;
                           });
+                  Provider.of<ThemeSelector>(context, listen: false).toggle();
                         },
                       ),
                     ],
@@ -65,6 +69,7 @@ class _ShortSettingsState extends State<ShortSettings> {
                       Row(
                         children: [
                           Icon(Icons.notifications),
+                SizedBox(width: 8), 
                           Text(
                             "Notifications",
                             style: TextStyle(fontWeight: FontWeight.bold),
@@ -73,7 +78,7 @@ class _ShortSettingsState extends State<ShortSettings> {
                       ),
                       Switch(
                         value: notificationsEnabled,
-                        activeColor: Color(0xFF83BF4F),
+                        activeColor: Theme.of(context).colorScheme.secondary,
                         onChanged: (bool value) {
                           setState(() {
                             notificationsEnabled = value;
@@ -88,7 +93,7 @@ class _ShortSettingsState extends State<ShortSettings> {
                       Expanded(
                         child: ElevatedButton.icon(
                           style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.resolveWith(
+                            backgroundColor: WidgetStateProperty.resolveWith(
                               clearButton,
                             ),
                           ),
@@ -114,8 +119,8 @@ class _ShortSettingsState extends State<ShortSettings> {
 
 void clearHistory() {}
 
-Color clearButton(Set<MaterialState> states) {
-  if (states.contains(MaterialState.pressed)) {
+Color clearButton(Set<WidgetState> states) {
+  if (states.contains(WidgetState.pressed)) {
     return Colors.red.shade500;
   } else {
     return Colors.red.shade600;
