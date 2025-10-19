@@ -1,47 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:geeco/state/app_state.dart'; // <-- added import
 
-class AboutUs extends StatelessWidget {
+class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
 
+  @override
+  State<AboutUs> createState() => _AboutUsState();
+}
+
+class _AboutUsState extends State<AboutUs> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    // Increase these to make photo and card bigger
-    final photoSize = width * 0.34; // was 0.28 — increase to make photo bigger
-    final cardWidth = width * 0.62;
+    final photoSize = width * 0.30; // was 0.28 — increase to make photo bigger
+    final cardWidth = width * 0.70; // was 0.62
     const cardRadius = 12.0;
 
     Widget memberCard({
       required String name,
       required String desc,
       required bool photoRight,
-      // NEW: when true, align text to the right side of the green card
+      String? imagePath, // ← new param
       bool alignTextRight = false,
     }) {
-      // Make the info card vertically wider. You can set a multiplier or a fixed value.
       final infoCardHeight =
-          photoSize * 0.95; // was 0.78 — increase to make green box taller
+          photoSize * 1; // was 0.78 — increase to make green box TALLER
 
-      // Move the photo down/up relative to the card (adjust after changing sizes)
-      final double photoDownOffset = photoSize * 0.40;
+      final double photoDownOffset = photoSize * 0.40; // move the photo down
 
-      // adjust padding depending on text alignment so text isn't under the overlapping photo
       final EdgeInsets infoPadding = alignTextRight
           ? const EdgeInsets.fromLTRB(24, 16, 16, 16)
           : const EdgeInsets.all(16);
 
       final infoCard = SizedBox(
         width: cardWidth,
-        height: infoCardHeight, // increased height for the green box
+        height: infoCardHeight,
         child: Container(
-          padding: infoPadding, // use adjusted padding
+          padding: infoPadding,
           decoration: BoxDecoration(
-            color: const Color(0xFF8FD85F),
+            color: const Color.fromARGB(255, 144, 218, 79),
             borderRadius: BorderRadius.circular(cardRadius),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.08),
+                color: Colors.black.withOpacity(0.3),
                 blurRadius: 6,
                 offset: const Offset(0, 4),
               ),
@@ -50,67 +52,67 @@ class AboutUs extends StatelessWidget {
           child: Column(
             crossAxisAlignment: alignTextRight
                 ? CrossAxisAlignment.end
-                : CrossAxisAlignment.start, // align text
+                : CrossAxisAlignment.start,
             children: [
               Text(
                 name,
                 textAlign: alignTextRight ? TextAlign.right : TextAlign.left,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
-                  fontSize: 16,
+                  fontSize: 14,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(height: 6),
               Text(
                 desc,
                 textAlign: alignTextRight ? TextAlign.right : TextAlign.left,
-                style: const TextStyle(fontSize: 13),
+                style: const TextStyle(
+                  fontSize: 10,
+                  color: Color.fromARGB(255, 40, 40, 40),
+                ),
               ),
             ],
           ),
         ),
       );
 
-      final photo = Container(
-        width: photoSize, // uses updated photoSize
-        height: photoSize,
-        decoration: BoxDecoration(
-          color: Colors.grey.shade300,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 6,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        child: const Text(
-          'member\nphoto',
-          textAlign: TextAlign.center,
-          style: TextStyle(color: Colors.black54),
+      final photo = ClipRRect(
+        borderRadius: BorderRadius.circular(6.0), // small radius
+        child: Container(
+          width: photoSize,
+          height: photoSize,
+          decoration: BoxDecoration(
+            color: Colors.grey.shade300,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.06),
+                blurRadius: 6,
+                offset: const Offset(0, 4),
+              ),
+            ],
+            image: imagePath != null
+                ? DecorationImage(
+                    image: AssetImage(imagePath),
+                    fit: BoxFit.cover,
+                  )
+                : null,
+          ),
         ),
       );
 
       // Ensure the Stack has enough width so the photo can overlap the info card.
       final overlapFactor = 0.6;
       final stackWidth = cardWidth + photoSize * overlapFactor;
-
-      // stackHeight must accommodate the photo moved down to avoid clipping
       final stackHeight = photoSize + photoDownOffset;
-
-      // center the shorter infoCard vertically relative to photo
       final verticalOffset = (stackHeight - infoCardHeight) / 2;
 
-      // Build children so photo is always added last (drawn on top)
       final List<Widget> stackChildren = [];
 
       if (photoRight) {
         stackChildren.add(
           Positioned(left: 0, top: verticalOffset, child: infoCard),
         );
-        // add photo last so it overlays the card — moved down using positive top
         stackChildren.add(
           Positioned(right: 0, top: photoDownOffset, child: photo),
         );
@@ -132,65 +134,115 @@ class AboutUs extends StatelessWidget {
       );
     }
 
-    // Wrap page content in a white container so background is always white
-    return Container(
-      color: Colors.white,
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            SizedBox(
-              height: 180,
-              child: Image.asset(
-                'assets/images/aboutus_bg.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
-            Container(
-              color: Colors.white,
-              padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
-              child: const Text(
-                'About Us',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 8,
-              ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 100),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  memberCard(
-                    name: 'Member Name',
-                    desc: 'member description',
-                    photoRight: true,
+                  SizedBox(
+                    height: 180,
+                    child: Image.asset(
+                      'assets/images/aboutus_bg.jpg',
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  const SizedBox(height: 28),
-                  // SECOND MEMBER: align text to the right so it isn't covered by the photo
-                  memberCard(
-                    name: 'Member Name',
-                    desc: 'member description',
-                    photoRight: false,
-                    alignTextRight: true,
+                  Container(
+                    color: Colors.white,
+                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
+                    child: const Text(
+                      'About Us',
+                      style: TextStyle(
+                        fontSize: 35,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                  const SizedBox(height: 28),
-                  memberCard(
-                    name: 'Member Name',
-                    desc: 'member description',
-                    photoRight: true,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 4,
+                    ),
+                    child: Column(
+                      children: [
+                        memberCard(
+                          name: 'Ghen Benedict M. Namol',
+                          desc: 'Frontend Developer & Technical Lead',
+                          photoRight: true,
+                          //imagePath: 'assets/images/member_alice.jpg',
+                        ),
+                        const SizedBox(height: 16),
+                        memberCard(
+                          name: 'Baxter Gifford B. Bao-As',
+                          desc: 'Backend Developer & Technical Lead',
+                          photoRight: false,
+                          alignTextRight: true,
+                          imagePath: 'assets/images/bax.jpg',
+                        ),
+                        const SizedBox(height: 16),
+                        memberCard(
+                          name: 'Fabio S. Hascoet',
+                          desc: 'Lead Designer & Assistant Software Developer',
+                          photoRight: true,
+                          imagePath: 'assets/images/fabio.jpg',
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
-          ],
-        ),
+          ),
+
+          //floating button at bottom center
+          Positioned(
+            left: 24,
+            right: 24,
+            bottom: 24,
+            child: SafeArea(
+              top: false,
+              child: Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (Navigator.of(context).canPop()) {
+                      Navigator.of(context).pop();
+                    } else {
+                      // switch to Settings tab (index 3). Adjust index if different.
+                      selectedIndexNotifier.value = 3;
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF83BF4F),
+                    foregroundColor: Colors.white,
+                    elevation: 8,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 28,
+                      vertical: 14,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    minimumSize: const Size(220, 52),
+                  ),
+                  child: const Text(
+                    'BACK',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
