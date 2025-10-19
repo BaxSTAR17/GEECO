@@ -10,6 +10,8 @@ dependencies:
   flutter:
     sdk: flutter
   scaled_size: ^0.5.1
+  image_picker: ^1.2.0
+  lazy_load_indexed_stack: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -19,8 +21,13 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/images/default_backdrops/backdrops/
+    - assets/images/habitat_objects/Animal/
+    - assets/images/habitat_objects/Land/
+    - assets/images/habitat_objects/Water/
+    
   fonts:
     - family: Gabarito
-      fonts:
+      fonts:  
         - asset: assets/fonts/gabarito_variable.ttf
   uses-material-design: true

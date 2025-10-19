@@ -36,6 +36,7 @@ class _ShortSettingsState extends State<ShortSettings> {
               Row(
                 children:[
                 Icon(Icons.dark_mode),
+                SizedBox(width: 8), 
                 Text("Dark Mode", style: TextStyle(fontWeight: FontWeight.bold))
                 ]
               ),
@@ -57,6 +58,7 @@ class _ShortSettingsState extends State<ShortSettings> {
               Row(
                 children:[
                 Icon(Icons.notifications),
+                SizedBox(width: 8), 
                 Text("Notifications", style: TextStyle(fontWeight: FontWeight.bold))
                 ]
               ),
