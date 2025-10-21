@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lazy_load_indexed_stack/lazy_load_indexed_stack.dart';
 import 'package:geeco/modules/globalbottomnav.dart';
 import 'package:geeco/pages/homepage.dart';
 import 'package:geeco/pages/scans.dart';
@@ -14,8 +15,9 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int _selectedIndex = 0;
+  double appBarBorderRadius = 100000.0;
 
-  final List<Widget> _pages = const [
+  final List<Widget> _pages = [
     HomePage(),
     ScansPage(),
     EditorPage(),
@@ -25,14 +27,24 @@ class _RootPageState extends State<RootPage> {
   final List<String> _pageNames = const [
     "Home",
     "Eco-Lens",
-    "Editor",
+    "Digital Habitat Builder",
     "Settings",
   ];
 
   void _onItemTapped(int index){
     setState(() {
       _selectedIndex = index;
+      if (index == 2) {
+        appBarBorderRadius = 0.0;
+      }
+      else {
+        appBarBorderRadius = 100000.0;
+      }
+      
     });
+
+    
+      
   }
     
 
@@ -44,18 +56,21 @@ class _RootPageState extends State<RootPage> {
           child:Text(
             _pageNames[_selectedIndex], 
             style: TextStyle(
-              color: Colors.white
+              color: Colors.white,
+              fontFamily: "Gabarito"
             )
           )
         ),
         backgroundColor: Theme.of(context).colorScheme.tertiary,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100000), bottomRight: Radius.circular(100000)),
+          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(appBarBorderRadius), bottomRight: Radius.circular(appBarBorderRadius)),
         ),
       ),
-      body: IndexedStack(
+      body: LazyLoadIndexedStack(
         index: _selectedIndex,
-        children: _pages,),
+        autoDisposeIndexes: List.generate(_pages.length, (i) => i),
+        children: _pages,
+      ),
       bottomNavigationBar: GlobalBottomNavigationBar(
         selectedIndex: _selectedIndex,
         onItemTapped: _onItemTapped
