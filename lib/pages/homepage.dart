@@ -77,6 +77,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    loadHistory();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScaledSize(
       size: Size(ScaledSizeUtil.screenWidth, ScaledSizeUtil.screenHeight),

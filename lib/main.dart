@@ -1,4 +1,5 @@
 // import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:geeco/bax_end/theme_bax_end.dart';
@@ -16,6 +17,7 @@ import 'package:scaled_size/scaled_size.dart';
 // import 'package:flutter/services.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter's binding is initialized.
   WidgetsFlutterBinding.ensureInitialized(); // Ensures Flutter's binding is initialized.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

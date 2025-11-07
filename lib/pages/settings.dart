@@ -6,11 +6,15 @@ import 'package:geeco/pages/about.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
+class _SettingsPageState extends State<SettingsPage> {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
@@ -56,3 +60,4 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+
