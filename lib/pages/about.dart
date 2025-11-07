@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geeco/state/app_state.dart'; // <-- added import
-import 'package:geeco/state/app_state.dart'; // <-- added import
 
 class AboutUs extends StatefulWidget {
   const AboutUs({super.key});
-class AboutUs extends StatefulWidget {
-  const AboutUs({super.key});
 
-  @override
-  State<AboutUs> createState() => _AboutUsState();
-}
-
-class _AboutUsState extends State<AboutUs> {
   @override
   State<AboutUs> createState() => _AboutUsState();
 }
