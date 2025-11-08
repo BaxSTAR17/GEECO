@@ -76,18 +76,18 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Center(
-                child: SizedBox(
-                  width: ScaledSizeUtil.screenWidth * 0.8,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 0.0),
                   child: FittedBox(
-                    fit: BoxFit.scaleDown,
                     alignment: Alignment.center,
                     child: history.isEmpty
                     ? Text(
-                        "No evaluations to show. Scan or Edit to get started!",
+                        "No evaluations to show yet. Scan or Build to get started!",
                         maxLines: 1,
                         softWrap: false,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
+                          color: Theme.of(context).colorScheme.shadow,
                           fontWeight: FontWeight.bold,
                           fontSize: 1.25.rem,
                           fontFamily: "Gabarito",
@@ -124,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                                           child: Container(
                                             height: 90,
                                             decoration: BoxDecoration(
-                                              color: Color.fromARGB(210, 210, 210, 210),
+                                              color: Theme.of(context).colorScheme.surface.withAlpha(180),
                                               borderRadius: BorderRadius.circular(15)
                                             ),
                                             child: Padding(
@@ -151,26 +151,30 @@ class _HomePageState extends State<HomePage> {
                                                       ),
                                                     )
                                                   ),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Text(
-                                                        "Evaluation#${i+1}",
-                                                        style: TextStyle(
-                                                          fontFamily: "Gabarito",
-                                                          fontWeight: FontWeight.bold,
-                                                          fontSize: 1.7.rem
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          "Evaluation#${i+1}",
+                                                          style: TextStyle(
+                                                            fontFamily: "Gabarito",
+                                                            fontWeight: FontWeight.bold,
+                                                            fontSize: 1.4.rem,
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Text(
-                                                        "${history[i].substring(2, 5)}...",
-                                                        style: TextStyle(
-                                                          fontFamily: "Gabarito",
-                                                          fontSize: 1.1.rem,
-                                                          fontStyle: FontStyle.italic
-                                                        ),
-                                                      )
-                                                    ],
+                                                        SizedBox(
+                                                          child: Text(
+                                                            "${history[i].substring(3, 14)}...",
+                                                            style: TextStyle(
+                                                              fontFamily: "Gabarito",
+                                                              fontSize: 0.7.rem,
+                                                              fontStyle: FontStyle.italic,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    ),
                                                   )
                                                 ],
                                               ),

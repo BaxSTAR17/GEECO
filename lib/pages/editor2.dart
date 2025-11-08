@@ -425,7 +425,7 @@ class _EditorPageState extends State<EditorPage> {
                         height: MediaQuery.of(context).size.height * 0.075,
                         child: Center(
                           child: Text(
-                            "Select a natural feature",
+                            "Drag the Sticker to the Canvas to place",
                             style: TextStyle(
                               color: Colors.blueGrey,
                               fontSize: 20.0,

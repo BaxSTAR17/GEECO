@@ -138,7 +138,7 @@ class _AboutUsState extends State<AboutUs> {
       body: Stack(
         children: [
           Container(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             child: SingleChildScrollView(
               padding: const EdgeInsets.only(bottom: 100),
               child: Column(
@@ -152,14 +152,13 @@ class _AboutUsState extends State<AboutUs> {
                     ),
                   ),
                   Container(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     padding: const EdgeInsets.fromLTRB(16, 20, 16, 24),
                     child: const Text(
                       'About Us',
                       style: TextStyle(
                         fontSize: 35,
                         fontWeight: FontWeight.bold,
-                        color: Colors.black,
                       ),
                     ),
                   ),

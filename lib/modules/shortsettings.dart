@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geeco/bax_end/theme_bax_end.dart';
 import 'package:provider/provider.dart';
-import '../pages/about.dart';
+import 'package:scaled_size/scaled_size.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+// import '../pages/about.dart';
 
 class ShortSettings extends StatefulWidget {
   const ShortSettings({super.key});
@@ -51,38 +54,10 @@ class _ShortSettingsState extends State<ShortSettings> {
                       ),
                       Switch(
                         // This bool value toggles the switch.
-                        value: Provider.of<ThemeSelector>(context).themeData == darkMode,
+                        value: Provider.of<ThemeSelector>(context).isDark,
                         activeColor: Theme.of(context).colorScheme.secondary,
                         onChanged: (bool value) {
-                          // This is called when the user toggles the switch.
-                          setState(() {
-                            //darkMode = value;
-                          });
-                  Provider.of<ThemeSelector>(context, listen: false).toggle();
-                        },
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.notifications),
-                SizedBox(width: 8), 
-                          Text(
-                            "Notifications",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      Switch(
-                        value: notificationsEnabled,
-                        activeColor: Theme.of(context).colorScheme.secondary,
-                        onChanged: (bool value) {
-                          setState(() {
-                            notificationsEnabled = value;
-                          });
+                          Provider.of<ThemeSelector>(context, listen: false).toggle();
                         },
                       ),
                     ],
@@ -102,7 +77,36 @@ class _ShortSettingsState extends State<ShortSettings> {
                             "Clear History",
                             style: TextStyle(color: Colors.white),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            showDialog(
+                              context: context, 
+                              builder: (BuildContext context) {
+                                return SimpleDialog(
+                                  title: Text("Are you sure you want to clear your history?"),
+                                  children: [
+                                    SimpleDialogOption(
+                                      onPressed: () {
+                                        clearHistory();
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text(
+                                        "Delete",
+                                        style: TextStyle(
+                                          color:Colors.red
+                                        ),
+                                      )
+                                    ),
+                                    SimpleDialogOption(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text("Cancel")
+                                    )
+                                  ],
+                                );
+                              }
+                            );
+                          },
                         ),
                       ),
                     ],
@@ -117,7 +121,26 @@ class _ShortSettingsState extends State<ShortSettings> {
   }
 }
 
-void clearHistory() {}
+Future<void> clearHistory() async {
+  String message = "";
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  dynamic data = prefs.get("History");
+  if(data != null) {
+    List<String> history = [];
+    history = data as List<String>;
+    int length = history.length;
+    if(history.length > 0) {
+      prefs.setStringList("History", []);
+      for(var i = 0; i < length; i++) if(prefs.get("Images$i") != null)prefs.setStringList("Images$i", []);
+      message = "History Cleared";
+    } else message = "Your history is empty.";
+  } else message = "Your history is empty.";
+  Fluttertoast.showToast(
+    msg: message,
+    toastLength: Toast.LENGTH_SHORT,
+    fontSize: 0.8.rem,
+  );
+}
 
 Color clearButton(Set<WidgetState> states) {
   if (states.contains(WidgetState.pressed)) {
@@ -126,3 +149,4 @@ Color clearButton(Set<WidgetState> states) {
     return Colors.red.shade600;
   }
 }
+

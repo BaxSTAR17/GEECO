@@ -1,12 +1,17 @@
-import 'dart:math';
-import 'package:dynamic_widget/dynamic_widget.dart';
-import 'package:dynamic_widget/dynamic_widget/basic/dynamic_widget_json_exportor.dart';
-import 'package:dynamic_widget/dynamic_widget/basic/stack_positioned_widgets_parser.dart';
-import 'package:dynamic_widget/dynamic_widget/utils.dart';
+// import 'dart:math';
+// import 'package:dynamic_widget/dynamic_widget.dart';
+// import 'package:dynamic_widget/dynamic_widget/basic/dynamic_widget_json_exportor.dart';
+// import 'package:dynamic_widget/dynamic_widget/basic/stack_positioned_widgets_parser.dart';
+// import 'package:dynamic_widget/dynamic_widget/utils.dart';
+// import 'dart:math';
+// import 'package:dynamic_widget/dynamic_widget.dart';
+// import 'package:dynamic_widget/dynamic_widget/basic/dynamic_widget_json_exportor.dart';
+// import 'package:dynamic_widget/dynamic_widget/basic/stack_positioned_widgets_parser.dart';
+// import 'package:dynamic_widget/dynamic_widget/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gal/gal.dart';
-import 'package:geeco/bax_end/evaluation_bax_end.dart';
+// import 'package:geeco/bax_end/evaluation_bax_end.dart';
 // import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:geeco/modules/globalbottomnav.dart';
 import 'package:geeco/pages/evaluation.dart';
@@ -16,7 +21,7 @@ import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
 class EditorPage extends StatefulWidget {
@@ -71,12 +76,12 @@ class _EditorPageState extends State<EditorPage> {
       if (mounted) {
         setState(() {
           _dataLoaded = true;
-          if(exported_images.isEmpty == false) {
-            Image image = Image.file(File(exported_images[0]));
+          if(exportedImages.isEmpty == false) {
+            Image image = Image.file(File(exportedImages[0]));
             defaultBackdrop = image.image;
             var temp = defaultBackdrops.toList();
-            for(int i = 0; i < exported_images.length; i++) {
-              temp.add(MapEntry("Scanned Image #${i+1}", exported_images[i]));
+            for(int i = 0; i < exportedImages.length; i++) {
+              temp.add(MapEntry("Scanned Image #${i+1}", exportedImages[i]));
             }
             defaultBackdrops = temp;
           }
@@ -348,11 +353,11 @@ class _EditorPageState extends State<EditorPage> {
     );
   }
 
-  Future<void> saveToHomePage() async {
-    for(var sticker in placedStickers) {
+  // Future<void> saveToHomePage() async {
+  //   for(var sticker in placedStickers) {
      
-    }
-  }
+  //   }
+  // }
 
   Future<void> chooseBackdropFromGallery() async {
     final picker = ImagePicker();
@@ -567,7 +572,7 @@ class _EditorPageState extends State<EditorPage> {
                         height: 52.0,
                         child: Center(
                           child: Text(
-                            "Select a natural feature",
+                            "Drag a sticker to the Canvas",
                             style: TextStyle(
                               color: Colors.lightGreen.shade100,
                               fontSize: 20.0,

@@ -1,9 +1,11 @@
 // import 'dart:ffi';
+// import 'dart:ffi';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:geeco/bax_end/theme_bax_end.dart';
-import 'package:geeco/pages/rootpage.dart';
-import 'package:geeco/pages/welcome.dart';
+import 'package:geeco/pages/splash.dart';
+// import 'package:geeco/pages/rootpage.dart';
+// import 'package:geeco/pages/welcome.dart';
 import 'package:provider/provider.dart';
 import 'package:scaled_size/scaled_size.dart';
 
@@ -32,10 +34,13 @@ class MainApp extends StatelessWidget {
     return ScaledSize(
       builder: () {
         return MaterialApp(
+          debugShowCheckedModeBanner: false,
           theme: Provider.of<ThemeSelector>(context).themeData,
-          home: const RootPage()
+          darkTheme: darkMode(),
+          home: const SplashPage(),
         );
       }
     );
   }
 }
+
