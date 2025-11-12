@@ -30,19 +30,7 @@ extension StringExtensions on String {
 }
 
 bool loading = true;
-AIEvaluation evaluation = AIEvaluation(
-  "-2",
-  8,
-  "Humans cool",
-  9,
-  "Env Cool",
-  6,
-  "anim Cool",
-  8,
-  "overall cool",
-  ["Monk", "Monk", "Monk", ],
-  ["1. Yes", "2. Yesser"]
-);
+late AIEvaluation evaluation;
 
 late Color backgroundColor;
 
@@ -131,6 +119,7 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
   late Map<String, int?> categoryScore;
   late Map<String, String?> categoryEvaluation;
   Widget buildFeatureScoreSlider(String category) {
+    print("feature score: $category");
     return SizedBox(
       width: double.infinity,
       child: Row(
@@ -148,29 +137,31 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
               )
             ),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "${category.toUpperCase()} HEALTH SCORE",
-                style: TextStyle(
-                  color: getScoreColor(categoryScore[category]!),
-                  fontSize: 0.7.rem,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.italic
-                ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "${category.toUpperCase()} HEALTH SCORE",
+                    style: TextStyle(
+                      color: getScoreColor(categoryScore[category]!),
+                      fontSize: 0.7.rem,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic
+                    ),
+                  ),
+                  LinearProgressIndicator(
+                    minHeight: 17,
+                    value: (categoryScore[category]!/10).toDouble(),
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: getScoreColor(categoryScore[category]!),
+                    backgroundColor: Theme.of(context).colorScheme.outline,
+                  ),
+                ],
               ),
-              SizedBox(
-                width: 200,
-                child: LinearProgressIndicator(
-                  minHeight: 17,
-                  value: (categoryScore[category]!/10).toDouble(),
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: getScoreColor(categoryScore[category]!),
-                  backgroundColor: Theme.of(context).colorScheme.outline,
-                ),
-              ),
-            ],
+            ),
           ),
           Text(
             categoryScore[category].toString(),
@@ -277,28 +268,32 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
     );
   }
 
-  Widget buildErrorScreen() {
+  Widget buildErrorScreen(int successCode) {
     late String errorMessage;
     late String subMessage;
-    if (evaluation.success_code == -1) {
+    print("error code: $successCode");
+
+    if (successCode < 0) {
+      errorMessage = "UNDEFINED ERROR";
+      subMessage = "Oh no... ¯\\_(ツ)_/¯";
+    }
+
+    if (successCode == -1) {
       errorMessage = "ERROR: PICTURES TOO BLURRY";
       subMessage = "Please focus your camera when taking a picture";
     }
 
-    if (evaluation.success_code == -2) {
+    if (successCode == -2) {
       errorMessage = "ERROR: PICTURES DONT SHOW ENVIRONMENTAL ASPECTS";
       subMessage = "Take pictures of a natural environment";
     }
 
-    if (evaluation.success_code == -3) {
+    if (successCode == -3) {
       errorMessage = "ERROR: ANALYZE FAILED";
       subMessage = "Sorry, please try again...";
     }
 
-    else {
-      errorMessage = "UNDEFINED ERROR";
-      subMessage = "Oh no... ¯\\_(ツ)_/¯";
-    }
+
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -321,8 +316,70 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
       ]
     );
   }
-  Widget buildEvaluationResultsContent() {
 
+  Widget buildImageViewerChild(Image content) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Container (
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(16.0)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black,
+              blurRadius: 8,
+            )
+          ]
+        ),
+        clipBehavior: Clip.hardEdge,
+        child: AspectRatio(
+          aspectRatio:9/16,
+          child: content
+        )
+      )
+    );
+  }
+
+  Image evaluationImageLoader(String data, bool isBase64){
+    if (!isBase64){
+      return Image.file(File(data), fit: BoxFit.cover, );
+    }
+
+    else {
+      return Image.memory(base64Decode(data), fit: BoxFit.cover,);
+    }
+  }
+  Widget buildImageViewer() {
+    List<Widget> children = [];
+    if (widget.habitat != null) {
+      print("habitat content: ${widget.habitat}");
+      children.add(
+        buildImageViewerChild(Image.memory(widget.habitat))
+      );
+    }
+    if (widget.habitat == null) {
+      print("lens content: ${widget.images}");
+      children = widget.images.map((data) => buildImageViewerChild(evaluationImageLoader(data, widget.viewMode))).toList();
+    }
+    
+    return SingleChildScrollView(
+      scrollDirection:Axis.horizontal,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: MediaQuery.of(context).size.width, // Ensures it takes at least screen width
+        ),
+        child: Scrollbar(
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: children,
+          ),
+        ),
+      )
+    );
+
+  }
+
+  Widget buildEvaluationResultsContent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -332,50 +389,7 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
             child: FractionallySizedBox(
               heightFactor: 0.7,
               widthFactor: 1.0,
-              child: ListView.builder(
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-                itemCount: widget.images.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Container (
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(16.0)),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black,
-                            blurRadius: 8,
-                          )
-                        ]
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: () {
-                        if(widget.habitat == null && widget.viewMode == false) {
-                          return Image.file(
-                            File(widget.images[index]),
-                            height: 220,
-                            width: 140,
-                            fit: BoxFit.cover
-                          );
-                        }
-
-                        if(widget.habitat != null) {
-                          return Image.memory(
-                            widget.habitat
-                          );
-                        }
-
-                        if(widget.habitat == null && widget.viewMode == true && widget.images.length == 3) {
-                          return Image.memory(
-                            base64Decode(widget.images[index])
-                          );
-                        }
-                      } ()
-                    )
-                  );
-                }
-              ),
+              child: buildImageViewer()
             ),
           ),
         ),
@@ -651,6 +665,20 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
   }
 
   void initializeVariablesOnBuild() {
+    evaluation = AIEvaluation(
+      "0",
+      8,
+      "Humans cool",
+      9,
+      "Env Cool",
+      6,
+      "anim Cool",
+      8,
+      "overall cool",
+      ["Monk", "Monk", "Monk", ],
+      ["1. Yes", "2. Yesser"]
+    );
+
     // if(evaluation.success_code == 0) {
     //   humanColor = scoreRanges[evaluation.human_score!-1];
     //   envColor = scoreRanges[evaluation.env_score!-1];
@@ -672,10 +700,10 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
 
     evaluation.anim_list = ["Monkey", "Donkey", "Whake", "Zebra", "Octopus", "Ant", "Beaver", "Ostrich", "Stegosaurus", "Newts", "Lizards", ];
   
-    evaluation.success_code = 0;
-    evaluation.human_score = 1;
-    evaluation.overall_score = 9;
-    evaluation.success_code = 0;
+    // evaluation.success_code = 0;
+    // evaluation.human_score = 1;
+    // evaluation.overall_score = 9;
+    // evaluation.success_code = 0;
   }
 
   @override
@@ -718,7 +746,7 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
             fit: BoxFit.contain,
             opacity: 0.25
           ),
-          color: backgroundColor,
+          color: Color.fromARGB(255, 255, 226, 226),
         ),
         width: double.infinity,
         child: (() {
@@ -729,11 +757,11 @@ class _EvaluationState extends State<Evaluation> with SingleTickerProviderStateM
             );
           }
 
-          else if (evaluation.success_code != 0) {
+          else if (evaluation.success_code.toInt() != 0) {
             backgroundColor = Color.fromARGB(255, 255, 226, 226);
-            return buildErrorScreen();
+            return buildErrorScreen(evaluation.success_code.toInt());
           }
-          else { 
+          else {
             backgroundColor = Color(0x6683BF4F);
             return buildEvaluationResultsContent();
           }

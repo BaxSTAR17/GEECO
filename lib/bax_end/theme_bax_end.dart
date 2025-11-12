@@ -7,10 +7,11 @@ ThemeData lightMode()  {
       surface: Colors.white,
       outline: Color(0xFFD9D9D9),
       shadow: Colors.black,
-      primary: Color(0xFF3ACF72),
+      primary: Color(0xFF00461A),
       secondary: Color(0xFF83BF4F),
       tertiary: Color(0xFF022000),
-    )
+    ),
+    scaffoldBackgroundColor: Color(0xFF00461A)
   );
 }
 
@@ -28,21 +29,44 @@ ThemeData darkMode() {
   );
 }
 
+Map<ThemeMode, ThemeData> modeThemes = {
+  ThemeMode.light: lightMode(),
+  ThemeMode.system: lightMode(),
+  ThemeMode.dark: darkMode(),
+};
+
+ThemeMode flipThemeMode(ThemeMode mode) {
+  if (mode == ThemeMode.light){
+    return ThemeMode.dark;
+  }
+  
+  else if (mode == ThemeMode.dark){
+    return ThemeMode.light;
+  }
+
+  else {
+    return ThemeMode.system;
+  }
+}
+
 class ThemeSelector extends ChangeNotifier {
-  bool _isDark = false;
+  ThemeMode _selectedMode = ThemeMode.system;
 
   ThemeData theme = lightMode();
-
-  ThemeData get themeData => _isDark ? darkMode() : lightMode();
+  ThemeData get themeData => modeThemes[_selectedMode] ?? () {
+    print("error: selectedMode [$_selectedMode] not found, returning light");
+    return lightMode();
+  }();
 
   set themeData(ThemeData themeData) {
     theme = themeData;
   }
 
-  bool get isDark => _isDark;
 
-  void toggle() {
-    _isDark = !_isDark;
+  ThemeMode get selectedMode => _selectedMode;
+
+  void toggle({ThemeMode? force}) {
+    _selectedMode = force ?? flipThemeMode(_selectedMode);
     notifyListeners();
   }
 }

@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
             alignment: Alignment.center,
             children: [
               Positioned(
-                top: ScaledSizeUtil.screenHeight * 0.20,
+                //top: ScaledSizeUtil.screenHeight * 0.20,
                 left: 0,
                 right: 0,
                 child: Opacity(
@@ -69,7 +69,6 @@ class _HomePageState extends State<HomePage> {
                   child: Center(
                     child: Image.asset(
                       'assets/images/homepage_bg.png',
-                      width: ScaledSizeUtil.screenWidth * 0.8,
                       fit: BoxFit.contain,
                     ),
                   ),

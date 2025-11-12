@@ -36,7 +36,7 @@ class GlobalBottomNavigationBar extends StatelessWidget {
         ),
       ],
       currentIndex: selectedIndex,
-      selectedItemColor: Color(0xFF3ACF72),
+      selectedItemColor: Color(0xFF83BF4F),
       onTap: onItemTapped,
     );
   }
